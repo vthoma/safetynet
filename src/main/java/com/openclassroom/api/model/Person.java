@@ -1,33 +1,35 @@
 package com.openclassroom.api.model;
 
-import lombok.*;
 
+
+import lombok.*;
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Entity
 @Table(name = "persons")
+@Entity @IdClass(PersonId.class)
 @Getter
 @Setter
 @Generated
 @EqualsAndHashCode
 public class Person {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String firstName;
 
-    private String firstname;
-    private String lastname;
+    @Id
+    private String lastName;
+
     private String address;
     private String city;
     private Integer zip;
     private String phone;
     private String email;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Medicalrecord.class)
     @JoinColumn(name = "id", insertable = false, updatable = false)
     private Medicalrecord medicalrecord;
-
 }

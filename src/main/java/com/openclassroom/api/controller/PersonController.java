@@ -2,23 +2,18 @@ package com.openclassroom.api.controller;
 
 import com.openclassroom.api.dto.*;
 import com.openclassroom.api.model.Firestation;
-import com.openclassroom.api.model.Medicalrecord;
 import com.openclassroom.api.model.Person;
 import com.openclassroom.api.service.FirestationService;
 import com.openclassroom.api.service.MedicalrecordService;
 import com.openclassroom.api.service.PersonService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import scala.Int;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
-import java.util.function.Function;
 
 @RestController
 public class PersonController {
@@ -86,7 +81,7 @@ public class PersonController {
     }
 
     @GetMapping("firestation")
-    public FirestationDTO getPersonByFirestationId(@RequestParam(name = "stationNumber") final int stationNumber){
+    public FirestationDTO getPersonByFirestationId(@RequestParam(name = "stationNumber") int stationNumber){
         List<Firestation> firestations = firestationService.getFirestationByStation(stationNumber);
         List<Person> personList = new ArrayList<>();
         for (Firestation fire : firestations) {
@@ -94,10 +89,10 @@ public class PersonController {
         }
         FirestationDTO firestationDTO = new FirestationDTO();
         for (Person p : personList) {
-            firestationDTO.setData(p.getFirstname(), p.getLastname());
+            firestationDTO.setData(p.getFirstName(), p.getLastName());
         }
         for (Data d : firestationDTO.getData()) {
-            if (Integer.parseInt(medicalrecordService.getPersonByFullName(d.getFirstname(), d.getLastname()).get().getBirthdate().substring(6,10)) < 2003) {
+            if (Integer.parseInt(medicalrecordService.getPersonByFullName(d.getFirstname(), d.getLastname()).get().getBirthdate().substring(6, 10)) <= 2003) {
                 firestationDTO.setCountAdult(firestationDTO.getCountAdult() +1);
             } else {
                 firestationDTO.setCountChild(firestationDTO.getCountChild() +1);

@@ -1,18 +1,25 @@
 package com.openclassroom.api.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+@NoArgsConstructor
+@AllArgsConstructor
 
 @Getter
 @Setter
+@Generated
+@EqualsAndHashCode
 public class PersonInfoDTO {
-    private Long personId;
     private String firstname;
     private String lastname;
     private String address;
     private String birthdate;
     private String email;
-    private String medications;
-    private String allergies;
+    private List<String> medicationList = new ArrayList<>();
+    private List<String> allergiesList = new ArrayList<>();
 
 }

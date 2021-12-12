@@ -11,5 +11,5 @@ import java.util.Optional;
 
 @Repository
 public interface MedicalrecordRepository extends CrudRepository<Medicalrecord, Long> {
-    Optional<Medicalrecord> findByFirstnameAndLastname(String firstname, String lastname);
+    Optional<Medicalrecord> findByFirstNameAndLastName(String firstname, String lastname);
 }

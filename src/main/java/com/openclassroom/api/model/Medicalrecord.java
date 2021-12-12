@@ -3,24 +3,28 @@ package com.openclassroom.api.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Entity @IdClass(MedicalRecordId.class)
 @Table(name = "medicalrecords")
 @Generated
 @EqualsAndHashCode
 public class Medicalrecord {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
+    private String firstName;
 
-    private String firstname;
-    private String lastname;
+    @Id
+    private String lastName;
+
     private String birthdate;
-    private String medications;
-    private String allergies;
+
+    @ElementCollection
+    private List<String> medications;
+
+    @ElementCollection
+    private List<String> allergies;
 }
