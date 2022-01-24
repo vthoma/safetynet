@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.Year;
 import java.util.*;
 
 @RestController
@@ -33,23 +34,32 @@ public class PersonController {
         return list;
     }
 
-    @GetMapping("childAlert")
-    public List<Person> getAllPersonsMedical(@RequestParam(name = "address") String address) throws ParseException {
-        List<Person> persons = personService.getPersonsFromAddress(address);
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
-        List<Person> list = new ArrayList();
-        for (Person person : persons) {
-            Date birthday = format.parse(person.getMedicalrecord().getBirthdate());
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(birthday);
-            LocalDate startDate = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-            LocalDate endDate = LocalDate.now();
-            Period period = Period.between(startDate, endDate);
-            if (period.getYears() <= 18) {
-                list.add(person);
-            }
-        }
-        return list;
+    @GetMapping("/persons")
+    public List<Person> getAllPersons(){
+        return personService.getPersons();
+    }
+    @PostMapping("/person")
+    public Person addPerson(@RequestBody Person person) {
+        return personService.savePerson(person);
+    }
+
+//    @PutMapping("/person")
+//    public Person updatePerson(@RequestBody Person person) {
+//        return personService.updatePerson(person);
+//    }
+
+    @DeleteMapping("/person")
+    public Integer deletePerson(@RequestParam String firstname, @RequestParam String lastname) {
+        Integer deleteResult = personService.deletePerson(firstname, lastname);
+        return deleteResult;
+    }
+
+    @GetMapping("/childAlert")
+    public List<ChildalertDTO> getChildAlertList(@RequestParam String address) {
+
+        List<ChildalertDTO> childAlertDTOList = personService.getChildAlertDTOListFromAddress(address);
+        return childAlertDTOList;
+
     }
 
     @GetMapping("personInfo")
@@ -92,7 +102,7 @@ public class PersonController {
             firestationDTO.setData(p.getFirstName(), p.getLastName());
         }
         for (Data d : firestationDTO.getData()) {
-            if (Integer.parseInt(medicalrecordService.getPersonByFullName(d.getFirstname(), d.getLastname()).get().getBirthdate().substring(6, 10)) <= 2003) {
+            if (Integer.parseInt(medicalrecordService.getPersonByFullName(d.getFirstname(), d.getLastname()).get().getBirthDate().toString().substring(0, 4)) <= 2003) {
                 firestationDTO.setCountAdult(firestationDTO.getCountAdult() +1);
             } else {
                 firestationDTO.setCountChild(firestationDTO.getCountChild() +1);
